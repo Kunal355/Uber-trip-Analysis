@@ -1,69 +1,145 @@
-# Forecasting the Pulse of NYC: An Uber Trip Analysis
+Forecasting the Pulse of NYC: An Uber Trip Analysis
+My Journey with this Project
 
-##  My Journey with this Project
+I’ve always been fascinated by how cities move — the rush hours, the calm hours, the weekend shifts, and how all of it forms a rhythm. When I found this Uber dataset with over 4.5 million trip records from NYC, I wanted to see if I could do more than analyze it.
+I wanted to see if I could predict the city’s behavior.
 
-I've always been fascinated by the rhythms of a big city. When I found this dataset—a massive log of over 4.5 million Uber trips in NYC—I saw an opportunity to do more than just crunch numbers. I wanted to see if I could teach a machine to understand and predict the city's pulse.
+This project started with a simple question:
 
-This project is my journey into doing just that. It started with a simple question: **Can I accurately forecast the demand for Ubers on an hourly basis?**
+Can I accurately forecast hourly Uber demand using machine learning?
 
-The data itself has a cool backstory: it was originally obtained by the news site FiveThirtyEight through a Freedom of Information request. This means it's real, messy, and reflects the actual state of NYC back in 2014. My goal was to turn this raw data into a story and, ultimately, a predictive tool.
+The dataset was originally obtained by FiveThirtyEight through a Freedom of Information request. That makes it real, messy, and full of natural patterns — perfect for building a meaningful forecasting model.
 
----
+The Toolkit I Used
 
-## 🛠 The Toolkit I Used
+Language: Python
 
-*   **Language:** Python
-*   **Core Libraries:**
-    *   `pandas` & `numpy`: My go-to tools for wrangling and exploring the data.
-    *   `matplotlib` & `seaborn`: For bringing the data to life through visualizations.
-    *   `scikit-learn`: The foundation for my machine learning pipeline.
-    *   `xgboost`: The heavy-hitter I brought in to get the best possible predictive performance.
+Core Libraries:
 
----
+pandas and numpy: For cleaning, exploring, and handling millions of rows efficiently.
 
-##  How I Built It: From Raw Data to a Working Forecast
+matplotlib and seaborn: For visualizing demand patterns and trends.
 
-My process wasn't a straight line, but it followed a few key stages:
+scikit-learn: For implementing baseline machine learning models.
 
-1.  **Wrangling the Data:** The first step was messy. I had to combine six different monthly CSV files and wrestle the `Date/Time` columns into a format Python could understand. This was the crucial foundation for everything that followed.
+xgboost: The model that ultimately delivered the best accuracy.
 
-2.  **Finding the Patterns (EDA):** This was the fun part! I started plotting the data to see what stories it would tell. I immediately saw clear patterns: the morning lulls, the evening rush, and the weekend spikes. This confirmed that the demand wasn't random—it was predictable.
+streamlit: To deploy the final model into an interactive app.
 
-3.  **Teaching the Model to See Time:** A machine learning model doesn't inherently understand time. I had to engineer features to give it context. I settled on a "sliding window" approach: to predict the next hour's demand, the model looks at the demand from the previous 24 hours. This helps it learn daily cycles.
+How I Built It: From Raw Data to a Working Forecast
 
-4.  **Choosing and Training the Models:** I started with a solid baseline, **Random Forest**, which is great for its stability. Then, to push for higher accuracy, I moved to **XGBoost**, a more powerful algorithm known for winning data science competitions. I was careful to split my data chronologically to avoid the classic mistake of letting my model "peek" into the future.
+My process went step-by-step, transforming raw CSV files into a model that predicts the next hour’s Uber demand.
 
-5.  **Checking My Work:** I evaluated my models using the Mean Absolute Percentage Error (MAPE). My final XGBoost model achieved a **MAPE of 8.37%**, which I was really happy with. It means, on average, my hourly forecast is off by less than 9%.
+1. Wrangling the Data
 
----
+The dataset came split across six monthly files (April–September 2014). I combined them into one large dataframe and converted the Date/Time column into a proper datetime format.
+This step was essential — nothing works without clean and consistent timestamps.
 
-##  What I Discovered
+2. Finding the Patterns (EDA)
 
-*   **The City Never Sleeps (but it does nap):** The data clearly shows demand dropping off around 4-5 AM before roaring back to life for the morning commute.
-*   **XGBoost is a Powerhouse:** While Random Forest did a good job, XGBoost's ability to learn from its mistakes sequentially really made a difference in accuracy.
-*   **Forecasting is More Than a Hunch:** This project proved that we can move beyond guesswork and use data to make highly accurate predictions about human behavior, which has huge implications for logistics and resource management.
+Once the data was cleaned, I explored it through visualizations. What stood out right away:
 
----
+Evening rush hours
 
-##  Getting this Running Yourself
+Early-morning drops (around 3–5 AM)
 
-Want to dive in and play with the code? Here’s how:
+Weekend demand spikes
 
-1.  **Clone this repo:**
-    ```bash
-    git clone https://github.com/YOUR_USERNAME/uber-trip-forecasting.git
-    cd uber-trip-forecasting
-    ```
+A noticeable trend shift around mid-September
 
-2.  **Set up your environment:**
-    ```bash
-    # I recommend using a virtual environment
-    python -m venv venv
-    source venv/bin/activate
-    pip install -r requirements.txt
-    ```
+These patterns helped guide the modeling strategy.
 
-3.  **Grab the data:**
-    *   You can find the dataset on [Kaggle](https://www.kaggle.com/datasets/fivethirtyeight/uber-pickups-in-new-york-city ).
-    *   Create a `data` folder in this project and drop the `uber-raw-data-*.csv` files in there.
+3. Teaching the Model to Understand Time
 
+Models don’t understand time by default.
+So I created a 24-hour sliding window, meaning:
+
+To predict the next hour, the model looks at the previous 24 hours of demand.
+
+This gave the model a sense of daily cycles and repeated patterns.
+
+4. Training the Models
+
+I trained three main models:
+
+Random Forest
+
+Gradient Boosting (GBRT)
+
+XGBoost
+
+To avoid data leakage, I split the data chronologically, not randomly:
+
+Training: April 1 → September 14
+
+Testing: September 15 onward
+
+XGBoost clearly performed best.
+
+5. Evaluating Performance
+
+I evaluated all models using MAPE (Mean Absolute Percentage Error) because it’s intuitive and works well for demand forecasting.
+
+The final XGBoost model achieved roughly:
+
+≈ 9–10% MAPE,
+meaning it predicts hourly demand with over 90% accuracy.
+
+What I Discovered
+
+NYC truly follows a pattern, even hour-to-hour.
+
+Demand is very predictable, especially with the right features.
+
+XGBoost outperformed other models, especially in capturing subtle patterns.
+
+A trend shift in September plays a big role in separating the training/testing periods.
+
+Good feature engineering matters more than fancy models.
+
+Getting This Running Yourself
+
+If you want to try the code or run the app locally, here’s how:
+
+1. Clone the repository
+git clone https://github.com/Kunal355/Uber-trip-Analysis.git
+cd Uber-trip-Analysis
+
+2. Set up your environment
+python -m venv venv
+.\venv\Scripts\activate       # for Windows
+pip install -r requirements.txt
+
+3. Run the Streamlit app
+cd deployment
+streamlit run app.py
+
+
+This will open the interactive prediction app in your browser.
+
+Dataset Source
+
+The dataset used in this project can be found here:
+https://www.kaggle.com/datasets/amirmotefaker/uber-dataset-from-april-to-september-2014
+
+Project Structure
+Uber-trip-Analysis/
+│
+├── Uber_Trip_Demand_Forcasting.ipynb     # Full notebook: cleaning, EDA, training
+│
+├── deployment/
+│   ├── app.py
+│   ├── hourly_counts.csv
+│   ├── uber_xgb_model.pkl
+│   ├── requirements.txt
+│
+└── README.md
+
+
+
+Final Thoughts
+
+This project took me from raw messy CSV files to a fully deployed prediction app.
+It taught me how real-world forecasting works, how to design features for time-series problems, and how powerful models like XGBoost can be.
+
+If you're interested in urban data, forecasting, or machine learning, this project is a great example of how these pieces come together.
